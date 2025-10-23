@@ -1,0 +1,7 @@
+
+> cadastro-clientes@1.0.0 dev
+> node api/index.js
+
+Servidor rodando em http://localhost:3000
+Conectado ao banco de dados SQLite
+Tabela de clientes pronta

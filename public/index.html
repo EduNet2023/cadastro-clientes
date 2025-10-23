@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Cadastro de Clientes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .form-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      border-left: 4px solid #667eea;
+    }
+
+    .form-section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 0.95em;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+    }
+
+    .form-group textarea {
+      grid-column: 1 / -1;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      grid-column: 1 / -1;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .btn-info {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .btn-info:hover {
+      background: #138496;
+    }
+
+    .btn-warning {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+
+    .filter-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #17a2b8;
+    }
+
+    .filter-section h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .table-section {
+      margin-top: 30px;
+    }
+
+    .table-section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    thead {
+      background: #667eea;
+      color: white;
+    }
+
+    th {
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #667eea;
+    }
+
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-buttons .btn {
+      padding: 8px 12px;
+      font-size: 0.9em;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 2em;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .container {
+        box-shadow: none;
+        max-width: 100%;
+      }
+
+      .form-section,
+      .filter-section,
+      .button-group,
+      .action-buttons {
+        display: none;
+      }
+
+      .header {
+        background: white;
+        color: #333;
+        border-bottom: 2px solid #333;
+      }
+
+      table {
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8em;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        font-size: 0.9em;
+      }
+
+      th, td {
+        padding: 10px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .action-buttons .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 Sistema de Cadastro de Clientes</h1>
+      <p>Gerenciamento completo de clientes e planos</p>
+    </div>
+
+    <div class="content">
+      <div id="alert" class="alert"></div>
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      <div class="form-section">
+        <h2>Cadastrar/Editar Cliente</h2>
+        <form id="clienteForm">
+          <div class="form-grid">
+            <input type="hidden" id="clienteId">
+
+            <div class="form-group">
+              <label for="nome">Nome do Cliente *</label>
+              <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="form-group">
+              <label for="endereco">Endereço</label>
+              <input type="text" id="endereco" name="endereco">
+            </div>
+
+            <div class="form-group">
+              <label for="dataCadastro">Data do Cadastro</label>
+              <input type="date" id="dataCadastro" name="dataCadastro">
+            </div>
+
+            <div class="form-group">
+              <label for="plano">Plano</label>
+              <select id="plano" name="plano">
+                <option value="">Selecione um plano</option>
+                <option value="Básico">Básico - R$ 80,00</option>
+                <option value="Padrão">Padrão - R$ 90,00</option>
+                <option value="Profissional">Profissional - R$ 100,00</option>
+                <option value="Premium">Premium - R$ 120,00</option>
+                <option value="Empresarial">Empresarial - R$ 149,00</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="valorPlano">Valor do Plano (R$)</label>
+              <input type="number" id="valorPlano" name="valorPlano" step="0.01" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="dataVencimento">Data de Vencimento (dia do mês)</label>
+              <select id="dataVencimento" name="dataVencimento">
+                <option value="">Selecione o dia</option>
+                <option value="5">5º dia</option>
+                <option value="10">10º dia</option>
+                <option value="15">15º dia</option>
+                <option value="20">20º dia</option>
+                <option value="25">25º dia</option>
+                <option value="30">30º dia</option>
+              </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <input type="checkbox" id="carneativo" name="carneativo">
+              <label for="carneativo">Tem Carnê</label>
+            </div>
+
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea id="observacoes" name="observacoes" placeholder="Digite observações adicionais..."></textarea>
+            </div>
+
+            <div class="button-group">
+              <button type="submit" class="btn btn-success">💾 Salvar Cliente</button>
+              <button type="button" class="btn btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
+              <button type="button" class="btn btn-info" onclick="gerarRelatorio()">📊 Relatório</button>
+              <button type="button" class="btn btn-warning" onclick="imprimirFicha()">🖨️ Imprimir Ficha</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ESTATÍSTICAS -->
+      <div class="stats">
+        <div class="stat-card">
+          <h3 id="totalClientes">0</h3>
+          <p>Total de Clientes</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalReceita">R$ 0,00</h3>
+          <p>Receita Mensal</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalCarnes">0</h3>
+          <p>Clientes com Carnê</p>
+        </div>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filter-section">
+        <h3>🔍 Filtros</h3>
+        <div class="filter-grid">
+          <div class="form-group">
+            <label for="filtroVencimento">Filtrar por Data de Vencimento</label>
+            <select id="filtroVencimento" onchange="aplicarFiltros()">
+              <option value="">Todos os vencimentos</option>
+              <option value="5">5º dia</option>
+              <option value="10">10º dia</option>
+              <option value="15">15º dia</option>
+              <option value="20">20º dia</option>
+              <option value="25">25º dia</option>
+              <option value="30">30º dia</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="filtroPlano">Filtrar por Plano</label>
+            <select id="filtroPlano" onchange="aplicarFiltros()">
+              <option value="">Todos os planos</option>
+              <option value="Básico">Básico</option>
+              <option value="Padrão">Padrão</option>
+              <option value="Profissional">Profissional</option>
+              <option value="Premium">Premium</option>
+              <option value="Empresarial">Empresarial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="filtroCarneativo">Filtrar por Carnê</label>
+            <select id="filtroCarneativo" onchange="aplicarFiltros()">
+              <option value="">Todos</option>
+              <option value="1">Tem Carnê</option>
+              <option value="0">Sem Carnê</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="filtroBusca">Buscar por Nome</label>
+            <input type="text" id="filtroBusca" placeholder="Digite o nome do cliente..." onkeyup="aplicarFiltros()">
+          </div>
+        </div>
+      </div>
+
+      <!-- TABELA DE CLIENTES -->
+      <div class="table-section">
+        <h2>📊 Lista de Clientes</h2>
+        <div class="table-wrapper">
+          <table id="clientesTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Endereço</th>
+                <th>Data Cadastro</th>
+                <th>Plano</th>
+                <th>Valor (R$)</th>
+                <th>Vencimento</th>
+                <th>Carnê</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="clientesTableBody">
+              <tr>
+                <td colspan="10" class="no-data">Nenhum cliente cadastrado. Adicione um novo cliente acima.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA VISUALIZAR DETALHES -->
+  <div id="detalhesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Detalhes do Cliente</h2>
+        <button class="close-btn" onclick="fecharModal('detalhesModal')">&times;</button>
+      </div>
+      <div id="detalhesConteudo"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/api';
+    let clientesGlobal = [];
+
+    // Mapear valores dos planos
+    const planosValores = {
+      'Básico': 80.00,
+      'Padrão': 90.00,
+      'Profissional': 100.00,
+      'Premium': 120.00,
+      'Empresarial': 149.00
+    };
+
+    // Inicializar ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      setarDataAtual();
+      carregarClientes();
+      document.getElementById('plano').addEventListener('change', atualizarValorPlano);
+    });
+
+    // Definir data atual no campo de data do cadastro
+    function setarDataAtual() {
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById('dataCadastro').value = hoje;
+    }
+
+    // Atualizar valor do plano quando selecionado
+    function atualizarValorPlano() {
+      const plano = document.getElementById('plano').value;
+      const valor = planosValores[plano] || 0;
+      document.getElementById('valorPlano').value = valor.toFixed(2);
+    }
+
+    // Carregar clientes do servidor
+    async function carregarClientes() {
+      try {
+        const response = await fetch(`${API_URL}/clientes`);
+        if (!response.ok) throw new Error('Erro ao carregar clientes');
+        
+        clientesGlobal = await response.json();
+        exibirClientes(clientesGlobal);
+        atualizarEstatisticas();
+      } catch (erro) {
+        mostrarAlerta('Erro ao carregar clientes: ' + erro.message, 'error');
+      }
+    }
+
+    // Exibir clientes na tabela
+    function exibirClientes(clientes) {
+      const tbody = document.getElementById('clientesTableBody');
+      
+      if (clientes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="no-data">Nenhum cliente encontrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = clientes.map(cliente => `
+        <tr>
+          <td>${cliente.id}</td>
+          <td>${cliente.nome}</td>
+          <td>${cliente.telefone || '-'}</td>
+          <td>${cliente.endereco || '-'}</td>
+          <td>${formatarData(cliente.data_cadastro)}</td>
+          <td>${cliente.plano || '-'}</td>
+          <td>R$ ${parseFloat(cliente.valor_plano || 0).toFixed(2)}</td>
+          <td>${cliente.data_vencimento ? cliente.data_vencimento + 'º dia' : '-'}</td>
+          <td>${cliente.carneativo ? '✅ Sim' : '❌ Não'}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-info" onclick="editarCliente(${cliente.id})">✏️ Editar</button>
+              <button class="btn btn-danger" onclick="deletarCliente(${cliente.id})">🗑️ Deletar</button>
+              <button class="btn btn-secondary" onclick="visualizarDetalhes(${cliente.id})">👁️ Ver</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Submeter formulário
+    document.getElementById('clienteForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const clienteId = document.getElementById('clienteId').value;
+      const dadosCliente = {
+        nome: document.getElementById('nome').value,
+        telefone: document.getElementById('telefone').value,
+        endereco: document.getElementById('endereco').value,
+        data_cadastro: document.getElementById('dataCadastro').value,
+        plano: document.getElementById('plano').value,
+        valor_plano: parseFloat(document.getElementById('valorPlano').value),
+        data_vencimento: parseInt(document.getElementById('dataVencimento').value) || null,
+        carneativo: document.getElementById('carneativo').checked,
+        observacoes: document.getElementById('observacoes').value
+      };
+
+      try {
+        let response;
+        if (clienteId) {
+          // Atualizar
+          response = await fetch(`${API_URL}/clientes/${clienteId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosCliente)
+          });
+          mostrarAlerta('Cliente atualizado com sucesso!', 'success');
+        } else {
+          // Criar novo
+          response = await fetch(`${API_URL}/clientes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosCliente)
+          });
+          mostrarAlerta('Cliente cadastrado com sucesso!', 'success');
+        }
+
+        if (!response.ok) throw new Error('Erro ao salvar cliente');
+        
+        limparFormulario();
+        carregarClientes();
+      } catch (erro) {
+        mostrarAlerta('Erro: ' + erro.message, 'error');
+      }
+    });
+
+    // Editar cliente
+    async function editarCliente(id) {
+      try {
+        const response = await fetch(`${API_URL}/clientes/${id}`);
+        if (!response.ok) throw new Error('Cliente não encontrado');
+        
+        const cliente = await response.json();
+        
+        document.getElementById('clienteId').value = cliente.id;
+        document.getElementById('nome').value = cliente.nome;
+        document.getElementById('telefone').value = cliente.telefone || '';
+        document.getElementById('endereco').value = cliente.endereco || '';
+        document.getElementById('dataCadastro').value = cliente.data_cadastro;
+        document.getElementById('plano').value = cliente.plano || '';
+        document.getElementById('valorPlano').value = (cliente.valor_plano || 0).toFixed(2);
+        document.getElementById('dataVencimento').value = cliente.data_vencimento || '';
+        document.getElementById('carneativo').checked = cliente.carneativo === 1;
+        document.getElementById('observacoes').value = cliente.observacoes || '';
+
+        // Scroll para o formulário
+        document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+      } catch (erro) {
+        mostrarAlerta('Erro ao carregar cliente: ' + erro.message, 'error');
+      }
+    }
+
+    // Deletar cliente
+    async function deletarCliente(id) {
+      if (!confirm('Tem certeza que deseja deletar este cliente?')) return;
+
+      try {
+        const response = await fetch(`${API_URL}/clientes/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Erro ao deletar cliente');
+        
+        mostrarAlerta('Cliente deletado com sucesso!', 'success');
+        carregarClientes();
+      } catch (erro) {
+        mostrarAlerta('Erro: ' + erro.message, 'error');
+      }
+    }
+
+    // Visualizar detalhes do cliente
+    async function visualizarDetalhes(id) {
+      try {
+        const response = await fetch(`${API_URL}/clientes/${id}`);
+        if (!response.ok) throw new Error('Cliente não encontrado');
+        
+        const cliente = await response.json();
+        
+        const html = `
+          <div style="line-height: 1.8;">
+            <p><strong>ID:</strong> ${cliente.id}</p>
+            <p><strong>Nome:</strong> ${cliente.nome}</p>
+            <p><strong>Telefone:</strong> ${cliente.telefone || 'N/A'}</p>
+            <p><strong>Endereço:</strong> ${cliente.endereco || 'N/A'}</p>
+            <p><strong>Data de Cadastro:</strong> ${formatarData(cliente.data_cadastro)}</p>
+            <p><strong>Plano:</strong> ${cliente.plano || 'N/A'}</p>
+            <p><strong>Valor do Plano:</strong> R$ ${parseFloat(cliente.valor_plano || 0).toFixed(2)}</p>
+            <p><strong>Data de Vencimento:</strong> ${cliente.data_vencimento ? cliente.data_vencimento + 'º dia do mês' : 'N/A'}</p>
+            <p><strong>Tem Carnê:</strong> ${cliente.carneativo ? 'Sim ✅' : 'Não ❌'}</p>
+            <p><strong>Observações:</strong> ${cliente.observacoes || 'Nenhuma'}</p>
+          </div>
+        `;
+        
+        document.getElementById('detalhesConteudo').innerHTML = html;
+        document.getElementById('detalhesModal').style.display = 'block';
+      } catch (erro) {
+        mostrarAlerta('Erro: ' + erro.message, 'error');
+      }
+    }
+
+    // Limpar formulário
+    function limparFormulario() {
+      document.getElementById('clienteForm').reset();
+      document.getElementById('clienteId').value = '';
+      setarDataAtual();
+      document.getElementById('valorPlano').value = '0.00';
+    }
+
+    // Aplicar filtros
+    function aplicarFiltros() {
+      const filtroVencimento = document.getElementById('filtroVencimento').value;
+      const filtroPlano = document.getElementById('filtroPlano').value;
+      const filtroCarneativo = document.getElementById('filtroCarneativo').value;
+      const filtroBusca = document.getElementById('filtroBusca').value.toLowerCase();
+
+      const clientesFiltrados = clientesGlobal.filter(cliente => {
+        const vencimentoMatch = !filtroVencimento || cliente.data_vencimento == filtroVencimento;
+        const planoMatch = !filtroPlano || cliente.plano === filtroPlano;
+        const carneMatch = filtroCarneativo === '' || cliente.carneativo == filtroCarneativo;
+        const buscaMatch = !filtroBusca || cliente.nome.toLowerCase().includes(filtroBusca);
+
+        return vencimentoMatch && planoMatch && carneMatch && buscaMatch;
+      });
+
+      exibirClientes(clientesFiltrados);
+    }
+
+    // Gerar relatório
+    function gerarRelatorio() {
+      if (clientesGlobal.length === 0) {
+        mostrarAlerta('Nenhum cliente para gerar relatório', 'error');
+        return;
+      }
+
+      let relatorio = 'RELATÓRIO DE CLIENTES\n';
+      relatorio += '=' .repeat(80) + '\n';
+      relatorio += `Data do Relatório: ${new Date().toLocaleDateString('pt-BR')}\n`;
+      relatorio += `Total de Clientes: ${clientesGlobal.length}\n`;
+      relatorio += '=' .repeat(80) + '\n\n';
+
+      clientesGlobal.forEach((cliente, index) => {
+        relatorio += `${index + 1}. ${cliente.nome}\n`;
+        relatorio += `   ID: ${cliente.id}\n`;
+        relatorio += `   Telefone: ${cliente.telefone || 'N/A'}\n`;
+        relatorio += `   Endereço: ${cliente.endereco || 'N/A'}\n`;
+        relatorio += `   Plano: ${cliente.plano || 'N/A'} - R$ ${parseFloat(cliente.valor_plano || 0).toFixed(2)}\n`;
+        relatorio += `   Vencimento: ${cliente.data_vencimento ? cliente.data_vencimento + 'º dia' : 'N/A'}\n`;
+        relatorio += `   Carnê: ${cliente.carneativo ? 'Sim' : 'Não'}\n`;
+        relatorio += `   Observações: ${cliente.observacoes || 'Nenhuma'}\n`;
+        relatorio += '\n';
+      });
+
+      // Baixar relatório como arquivo de texto
+      const blob = new Blob([relatorio], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio_clientes_${new Date().toISOString().split('T')[0]}.txt`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      mostrarAlerta('Relatório gerado com sucesso!', 'success');
+    }
+
+    // Imprimir ficha do cliente
+    function imprimirFicha() {
+      const clienteId = document.getElementById('clienteId').value;
+      
+      if (!clienteId) {
+        mostrarAlerta('Selecione um cliente para imprimir a ficha', 'error');
+        return;
+      }
+
+      const cliente = clientesGlobal.find(c => c.id == clienteId);
+      if (!cliente) {
+        mostrarAlerta('Cliente não encontrado', 'error');
+        return;
+      }
+
+      const ficha = `
+        <html>
+          <head>
+            <title>Ficha do Cliente - ${cliente.nome}</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                line-height: 1.6;
+              }
+              .ficha {
+                border: 2px solid #333;
+                padding: 30px;
+                max-width: 600px;
+                margin: 0 auto;
+              }
+              h1 {
+                text-align: center;
+                border-bottom: 2px solid #333;
+                padding-bottom: 10px;
+              }
+              .campo {
+                margin-bottom: 15px;
+              }
+              .label {
+                font-weight: bold;
+                color: #333;
+              }
+              .valor {
+                color: #666;
+                margin-left: 10px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="ficha">
+              <h1>FICHA DO CLIENTE</h1>
+              <div class="campo">
+                <span class="label">ID:</span>
+                <span class="valor">${cliente.id}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Nome:</span>
+                <span class="valor">${cliente.nome}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Telefone:</span>
+                <span class="valor">${cliente.telefone || 'N/A'}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Endereço:</span>
+                <span class="valor">${cliente.endereco || 'N/A'}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Data de Cadastro:</span>
+                <span class="valor">${formatarData(cliente.data_cadastro)}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Plano:</span>
+                <span class="valor">${cliente.plano || 'N/A'}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Valor do Plano:</span>
+                <span class="valor">R$ ${parseFloat(cliente.valor_plano || 0).toFixed(2)}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Data de Vencimento:</span>
+                <span class="valor">${cliente.data_vencimento ? cliente.data_vencimento + 'º dia do mês' : 'N/A'}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Tem Carnê:</span>
+                <span class="valor">${cliente.carneativo ? 'Sim ✅' : 'Não ❌'}</span>
+              </div>
+              <div class="campo">
+                <span class="label">Observações:</span>
+                <span class="valor">${cliente.observacoes || 'Nenhuma'}</span>
+              </div>
+              <hr>
+              <p style="text-align: center; font-size: 0.9em; color: #999;">
+                Impresso em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
+              </p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const janela = window.open('', '', 'height=600,width=800');
+      janela.document.write(ficha);
+      janela.document.close();
+      janela.print();
+    }
+
+    // Atualizar estatísticas
+    function atualizarEstatisticas() {
+      const total = clientesGlobal.length;
+      const receita = clientesGlobal.reduce((sum, c) => sum + (parseFloat(c.valor_plano) || 0), 0);
+      const carnes = clientesGlobal.filter(c => c.carneativo).length;
+
+      document.getElementById('totalClientes').textContent = total;
+      document.getElementById('totalReceita').textContent = 'R$ ' + receita.toFixed(2).replace('.', ',');
+      document.getElementById('totalCarnes').textContent = carnes;
+    }
+
+    // Mostrar alerta
+    function mostrarAlerta(mensagem, tipo) {
+      const alert = document.getElementById('alert');
+      alert.textContent = mensagem;
+      alert.className = `alert alert-${tipo}`;
+      
+      setTimeout(() => {
+        alert.className = 'alert';
+      }, 5000);
+    }
+
+    // Formatar data
+    function formatarData(data) {
+      if (!data) return 'N/A';
+      return new Date(data).toLocaleDateString('pt-BR');
+    }
+
+    // Fechar modal
+    function fecharModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Fechar modal ao clicar fora
+    window.onclick = function(event) {
+      const modal = document.getElementById('detalhesModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+  </script>
+</body>
+</html>
+
