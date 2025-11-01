@@ -5,13 +5,15 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6Ik
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event, context) => {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Content-Type': 'application/json'
-  };
+  console.log('Função chamada:', event.httpMethod, event.path);
 
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -23,17 +25,26 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const path = event.path.split('/').filter(p => p);
     const method = event.httpMethod;
+    const path = event.path || '';
+    const pathParts = path.split('/').filter(p => p);
+    
+    console.log('Path:', path, 'Parts:', pathParts);
 
     // GET /api/clientes - Listar todos os clientes
-    if (method === 'GET' && path[1] === 'clientes' && !path[2]) {
+    if (method === 'GET' && (pathParts.includes('clientes') || path === '/api/clientes' || path.includes('clientes'))) {
+      console.log('Buscando clientes...');
       const { data, error } = await supabase
         .from('clientes')
         .select('*')
         .order('nome', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao buscar:', error);
+        throw error;
+      }
+      
+      console.log('Clientes encontrados:', data?.length || 0);
       return {
         statusCode: 200,
         headers,
@@ -41,31 +52,23 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // GET /api/clientes/:id - Obter cliente específico
-    if (method === 'GET' && path[1] === 'clientes' && path[2]) {
-      const { data, error } = await supabase
-        .from('clientes')
-        .select('*')
-        .eq('id', parseInt(path[2]))
-        .single();
-
-      if (error) throw error;
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(data)
-      };
-    }
-
     // POST /api/clientes - Criar novo cliente
-    if (method === 'POST' && path[1] === 'clientes') {
+    if (method === 'POST' && (pathParts.includes('clientes') || path === '/api/clientes' || path.includes('clientes'))) {
+      console.log('Criando novo cliente...');
       const body = JSON.parse(event.body);
+      console.log('Dados recebidos:', body);
+      
       const { data, error } = await supabase
         .from('clientes')
         .insert([body])
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao criar:', error);
+        throw error;
+      }
+      
+      console.log('Cliente criado:', data[0]);
       return {
         statusCode: 201,
         headers,
@@ -74,15 +77,23 @@ exports.handler = async (event, context) => {
     }
 
     // PUT /api/clientes/:id - Atualizar cliente
-    if (method === 'PUT' && path[1] === 'clientes' && path[2]) {
+    if (method === 'PUT' && pathParts.includes('clientes')) {
+      const id = pathParts[pathParts.indexOf('clientes') + 1];
+      console.log('Atualizando cliente:', id);
+      
       const body = JSON.parse(event.body);
       const { data, error } = await supabase
         .from('clientes')
         .update(body)
-        .eq('id', parseInt(path[2]))
+        .eq('id', parseInt(id))
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao atualizar:', error);
+        throw error;
+      }
+      
+      console.log('Cliente atualizado:', data[0]);
       return {
         statusCode: 200,
         headers,
@@ -91,13 +102,21 @@ exports.handler = async (event, context) => {
     }
 
     // DELETE /api/clientes/:id - Deletar cliente
-    if (method === 'DELETE' && path[1] === 'clientes' && path[2]) {
+    if (method === 'DELETE' && pathParts.includes('clientes')) {
+      const id = pathParts[pathParts.indexOf('clientes') + 1];
+      console.log('Deletando cliente:', id);
+      
       const { error } = await supabase
         .from('clientes')
         .delete()
-        .eq('id', parseInt(path[2]));
+        .eq('id', parseInt(id));
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao deletar:', error);
+        throw error;
+      }
+      
+      console.log('Cliente deletado');
       return {
         statusCode: 200,
         headers,
@@ -105,13 +124,14 @@ exports.handler = async (event, context) => {
       };
     }
 
+    console.log('Rota não encontrada:', method, path);
     return {
       statusCode: 404,
       headers,
       body: JSON.stringify({ error: 'Rota não encontrada' })
     };
   } catch (error) {
-    console.error('Erro:', error);
+    console.error('Erro na função:', error);
     return {
       statusCode: 500,
       headers,

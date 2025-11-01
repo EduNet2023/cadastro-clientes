@@ -9,8 +9,9 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/clientes:splat"
+  to = "/.netlify/functions/clientes"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
