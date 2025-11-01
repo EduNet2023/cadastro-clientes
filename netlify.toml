@@ -1,14 +1,15 @@
 [build]
   command = "npm install"
-  functions = "api"
+  functions = "functions"
   publish = "public"
 
 [functions]
   node_bundler = "esbuild"
+  directory = "functions"
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/index:*"
+  to = "/.netlify/functions/clientes:splat"
   status = 200
 
 [[redirects]]
